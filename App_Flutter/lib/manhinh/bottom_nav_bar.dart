@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:man_hinh/al_manhinh/manhinh3.dart';
-import 'package:man_hinh/al_manhinh/manhinh5.dart';
-import 'package:man_hinh/al_manhinh/manhinh6.dart';
-import 'package:man_hinh/al_manhinh/notifications_screen.dart';
+import 'package:man_hinh/manhinh/manhinh2.dart';
+import 'package:man_hinh/manhinh/manhinh3.dart';
+import 'package:man_hinh/manhinh/manhinh5.dart';
+import 'package:man_hinh/manhinh/manhinh4.dart';
 
 class BottomNavBar extends StatefulWidget {
   @override

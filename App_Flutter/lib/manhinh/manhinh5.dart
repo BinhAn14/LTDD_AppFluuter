@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert'; // Để xử lý JSON
 import 'package:http/http.dart' as http;
+import 'package:man_hinh/manhinh/manhinh1.dart';
 
 class Manhinh6 extends StatefulWidget {
   @override
@@ -157,12 +158,21 @@ Future<void> fetchUserData() async {
             ),
             Spacer(),
             TextButton(
-              onPressed: () {},
-              child: Text('Sign out'),
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.red,
-              ),
-            ),
+  onPressed: () async {
+    // Clear any stored data (if any)
+    // Then navigate to the login screen and remove all other routes
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => Manhinh1()),
+      (Route<dynamic> route) => false,  // Removes all previous routes
+    );
+  },
+  child: Text('Sign out'),
+  style: TextButton.styleFrom(
+    foregroundColor: Colors.red,
+  ),
+),
+
           ],
         ),
       ),
