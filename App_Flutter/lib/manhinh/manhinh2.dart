@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:man_hinh/al_manhinh/manhinh3.dart';
-import 'package:man_hinh/al_manhinh/manhinh5.dart';
-import 'package:man_hinh/al_manhinh/notifications_screen.dart';
+import 'package:man_hinh/manhinh/manhinh3.dart';
+import 'package:man_hinh/manhinh/manhinh5.dart';
+import 'package:man_hinh/manhinh/notifications_screen.dart';
 
 class Manhinh3 extends StatefulWidget {
   @override

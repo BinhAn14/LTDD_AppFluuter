@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:man_hinh/al_manhinh/manhinh1.dart';
+import 'package:man_hinh/manhinh/manhinh1.dart';
 
 void main() {
   runApp(const MyApp());
