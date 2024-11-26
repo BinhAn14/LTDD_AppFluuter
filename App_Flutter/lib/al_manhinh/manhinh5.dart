@@ -51,7 +51,7 @@ class Manhinh5 extends StatelessWidget {
                 padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 169, 210, 244),
-                  shape: BoxShape.circle, // Make it circular
+                  shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.search,
@@ -89,51 +89,56 @@ class Manhinh5 extends StatelessWidget {
                   time: '9:41 AM',
                   unreadMessages: 2,
                   imageUrl: 'assets/images/image2.png',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatDetailScreen(
+                          name: 'Yoo Jin',
+                          message: 'It’s a beautiful place',
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 ChatTile(
                   name: 'Jonathan P',
                   message: 'We can start at 8am',
                   time: '10:30 AM',
                   imageUrl: 'assets/images/image3.png',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatDetailScreen(
+                          name: 'Jonathan P',
+                          message: 'We can start at 8am',
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 ChatTile(
                   name: 'Myung Dae',
                   message: 'See you tomorrow',
                   time: '11:30 AM',
                   imageUrl: 'assets/images/image4.png',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatDetailScreen(
+                          name: 'Myung Dae',
+                          message: 'See you tomorrow',
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/icon1.png', width: 24, height: 24),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/icon2.png', width: 24, height: 24),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/icon3.png', width: 24, height: 24),
-            label: 'chat',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/icon4.png', width: 24, height: 24),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/icon5.png', width: 24, height: 24),
-            label: '',
-          ),
-        ],
-        selectedItemColor: Colors.teal,
-        unselectedItemColor: Colors.grey,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
       ),
     );
   }
@@ -145,6 +150,7 @@ class ChatTile extends StatelessWidget {
   final String time;
   final int unreadMessages;
   final String imageUrl;
+  final VoidCallback onTap;
 
   ChatTile({
     required this.name,
@@ -152,6 +158,7 @@ class ChatTile extends StatelessWidget {
     required this.time,
     required this.imageUrl,
     this.unreadMessages = 0,
+    required this.onTap,
   });
 
   @override
@@ -188,6 +195,26 @@ class ChatTile extends StatelessWidget {
               ),
             ),
         ],
+      ),
+      onTap: onTap,
+    );
+  }
+}
+
+class ChatDetailScreen extends StatelessWidget {
+  final String name;
+  final String message;
+
+  ChatDetailScreen({required this.name, required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(name),
+      ),
+      body: Center(
+        child: Text(message),
       ),
     );
   }

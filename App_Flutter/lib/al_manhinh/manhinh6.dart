@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:convert'; // Để xử lý JSON
+import 'package:http/http.dart' as http;
 
 class Manhinh6 extends StatefulWidget {
   @override
@@ -7,6 +9,55 @@ class Manhinh6 extends StatefulWidget {
 
 class _SettingsScreenState extends State<Manhinh6> {
   bool _notificationsEnabled = true;
+  String fullName = "Loading...";
+  String email = "Loading...";
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+Future<void> fetchUserData() async {
+  final url = Uri.parse('https://gkiltdd.onrender.com/api/users');
+  try {
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      print("API Response: ${response.body}");
+      final data = json.decode(response.body);
+
+      // Xử lý nếu API trả về danh sách người dùng
+      if (data is List && data.isNotEmpty) {
+        setState(() {
+          fullName = data[0]['full_name']?.toString() ?? "N/A";
+          email = data[0]['email'] ?? "N/A";
+        });
+      }
+      // Xử lý nếu API trả về đối tượng đơn lẻ
+      else if (data is Map) {
+        setState(() {
+          fullName = data['full_name']?.toString() ?? "N/A";
+          email = data['email'] ?? "N/A";
+        });
+      } else {
+        throw "Unexpected API response structure";
+      }
+    } else {
+      print("Failed to fetch data. Status code: ${response.statusCode}");
+      setState(() {
+        fullName = "Error loading name";
+        email = "Error loading email";
+      });
+    }
+  } catch (e) {
+    print("Error: $e");
+    setState(() {
+      fullName = "Failed to fetch data";
+      email = "Failed to fetch data";
+    });
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +94,13 @@ class _SettingsScreenState extends State<Manhinh6> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Tuan Tran',
+                        fullName,
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: Colors.white),
                       ),
-                      Text('Guide', style: TextStyle(color: Colors.white70)),
+                      Text(email, style: TextStyle(color: Colors.white70)),
                     ],
                   ),
                   Spacer(),
