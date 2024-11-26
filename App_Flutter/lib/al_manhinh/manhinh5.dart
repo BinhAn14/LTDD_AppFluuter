@@ -1,221 +1,190 @@
 import 'package:flutter/material.dart';
+import 'dart:convert'; // Để xử lý JSON
+import 'package:http/http.dart' as http;
 
-class Manhinh5 extends StatelessWidget {
+class Manhinh6 extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(200),
-        child: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          flexibleSpace: Stack(
-            children: [
-              Positioned.fill(
-                child: Image.asset(
-                  'assets/images/image1.png',
-                  fit: BoxFit.cover,
-                  alignment: Alignment.center,
-                ),
-              ),
-              Container(
-                height: 200,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.transparent,
-                      Colors.transparent,
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 140,
-                left: 16,
-                child: Text(
-                  'Chat',
-                  style: TextStyle(
-                    fontSize: 28,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            IconButton(
-              icon: Container(
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 169, 210, 244),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
-              ),
-              onPressed: () {},
-            ),
-          ],
-        ),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Search Chat',
-                prefixIcon: Icon(Icons.search),
-                filled: true,
-                fillColor: Colors.grey[200],
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: ListView(
-              children: [
-                ChatTile(
-                  name: 'Yoo Jin',
-                  message: 'It’s a beautiful place',
-                  time: '9:41 AM',
-                  unreadMessages: 2,
-                  imageUrl: 'assets/images/image2.png',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChatDetailScreen(
-                          name: 'Yoo Jin',
-                          message: 'It’s a beautiful place',
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                ChatTile(
-                  name: 'Jonathan P',
-                  message: 'We can start at 8am',
-                  time: '10:30 AM',
-                  imageUrl: 'assets/images/image3.png',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChatDetailScreen(
-                          name: 'Jonathan P',
-                          message: 'We can start at 8am',
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                ChatTile(
-                  name: 'Myung Dae',
-                  message: 'See you tomorrow',
-                  time: '11:30 AM',
-                  imageUrl: 'assets/images/image4.png',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChatDetailScreen(
-                          name: 'Myung Dae',
-                          message: 'See you tomorrow',
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+  _SettingsScreenState createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<Manhinh6> {
+  bool _notificationsEnabled = true;
+  String fullName = "Loading...";
+  String email = "Loading...";
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+Future<void> fetchUserData() async {
+  final url = Uri.parse('https://gkiltdd.onrender.com/api/users');
+  try {
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      print("API Response: ${response.body}");
+      final data = json.decode(response.body);
+
+      // Xử lý nếu API trả về danh sách người dùng
+      if (data is List && data.isNotEmpty) {
+        setState(() {
+          fullName = data[0]['full_name']?.toString() ?? "N/A";
+          email = data[0]['email'] ?? "N/A";
+        });
+      }
+      // Xử lý nếu API trả về đối tượng đơn lẻ
+      else if (data is Map) {
+        setState(() {
+          fullName = data['full_name']?.toString() ?? "N/A";
+          email = data['email'] ?? "N/A";
+        });
+      } else {
+        throw "Unexpected API response structure";
+      }
+    } else {
+      print("Failed to fetch data. Status code: ${response.statusCode}");
+      setState(() {
+        fullName = "Error loading name";
+        email = "Error loading email";
+      });
+    }
+  } catch (e) {
+    print("Error: $e");
+    setState(() {
+      fullName = "Failed to fetch data";
+      email = "Failed to fetch data";
+    });
   }
 }
 
-class ChatTile extends StatelessWidget {
-  final String name;
-  final String message;
-  final String time;
-  final int unreadMessages;
-  final String imageUrl;
-  final VoidCallback onTap;
-
-  ChatTile({
-    required this.name,
-    required this.message,
-    required this.time,
-    required this.imageUrl,
-    this.unreadMessages = 0,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundImage: AssetImage(imageUrl),
-        radius: 25,
-      ),
-      title: Text(
-        name,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      subtitle: Text(message),
-      trailing: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(time, style: TextStyle(color: Colors.grey)),
-          if (unreadMessages > 0)
-            Container(
-              padding: EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: Colors.red,
-                shape: BoxShape.circle,
-              ),
-              child: Text(
-                unreadMessages.toString(),
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                ),
-              ),
-            ),
-        ],
-      ),
-      onTap: onTap,
-    );
-  }
-}
-
-class ChatDetailScreen extends StatelessWidget {
-  final String name;
-  final String message;
-
-  ChatDetailScreen({required this.name, required this.message});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(name),
+        title: Text('Settings'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
-      body: Center(
-        child: Text(message),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Profile section with green background
+            Container(
+              padding: EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.green,
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundImage: AssetImage('assets/icon6/image1.png'),
+                  ),
+                  SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        fullName,
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                      Text(email, style: TextStyle(color: Colors.white70)),
+                    ],
+                  ),
+                  Spacer(),
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: Text('EDIT PROFILE'),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.teal,
+                      backgroundColor: Colors.white, // Button text color
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 20),
+            // Notifications with Switch
+            ListTile(
+              leading:
+                  Image.asset('assets/icon6/icon1.png', width: 24, height: 24),
+              title: Text('Notifications'),
+              trailing: Switch(
+                value: _notificationsEnabled,
+                onChanged: (bool value) {
+                  setState(() {
+                    _notificationsEnabled = value;
+                  });
+                },
+                activeColor: Colors.green, // Green when enabled
+              ),
+            ),
+            SettingsOption(
+              title: 'Languages',
+              iconPath: 'assets/icon6/icon2.png',
+            ),
+            SettingsOption(
+              title: 'Payment Info',
+              iconPath: 'assets/icon6/icon3.png',
+            ),
+            SettingsOption(
+              title: 'Income Stats',
+              iconPath: 'assets/icon6/icon4.png',
+            ),
+            SettingsOption(
+              title: 'Privacy & Policies',
+              iconPath: 'assets/icon6/icon5.png',
+            ),
+            SettingsOption(
+              title: 'Feedback',
+              iconPath: 'assets/icon6/icon6.png',
+            ),
+            SettingsOption(
+              title: 'Usage',
+              iconPath: 'assets/icon6/icon7.png',
+            ),
+            Spacer(),
+            TextButton(
+              onPressed: () {},
+              child: Text('Sign out'),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.red,
+              ),
+            ),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+class SettingsOption extends StatelessWidget {
+  final String title;
+  final String iconPath; // Custom image path for icon
+
+  const SettingsOption({required this.title, required this.iconPath});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Image.asset(iconPath, width: 24, height: 24),
+      title: Text(title),
+      trailing: Icon(Icons.chevron_right),
+      onTap: () {
+        // Handle tap
+      },
     );
   }
 }

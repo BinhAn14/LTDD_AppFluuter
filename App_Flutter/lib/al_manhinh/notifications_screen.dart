@@ -5,37 +5,43 @@ class NotificationsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notifications'),
+        title: Text('Thông Báo'),
         backgroundColor: const Color.fromARGB(255, 35, 206, 63),
+        centerTitle: true,
+        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: [
-            Text(
-              'Recent Notifications',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: const Color.fromARGB(255, 43, 177, 88),
+            // Tiêu đề danh sách thông báo
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: Text(
+                'Thông Báo Mới Nhất',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: const Color.fromARGB(255, 43, 177, 88),
+                ),
               ),
             ),
-            SizedBox(height: 20),
+
+            // Các thẻ thông báo
             NotificationCard(
-              title: 'New Message from Admin',
-              description: 'Your course schedule has been updated.',
-              time: '2 minutes ago',
+              title: 'Tin nhắn mới từ Admin',
+              description: 'Lịch học của bạn đã được cập nhật.',
+              time: 'Vừa xong',
             ),
             NotificationCard(
-              title: 'New Assignment Posted',
-              description: 'A new assignment has been posted in your course.',
-              time: '5 minutes ago',
+              title: 'Bài tập mới được đăng',
+              description: 'Một bài tập mới đã được đăng trong khóa học của bạn.',
+              time: '5 phút trước',
             ),
             NotificationCard(
-              title: 'Upcoming Exam Reminder',
-              description: 'Your next exam is scheduled for tomorrow.',
-              time: '1 hour ago',
+              title: 'Nhắc nhở kỳ thi sắp tới',
+              description: 'Kỳ thi tiếp theo của bạn được lên lịch vào ngày mai.',
+              time: '1 giờ trước',
             ),
           ],
         ),
@@ -59,31 +65,32 @@ class NotificationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.symmetric(vertical: 10),
-      elevation: 5,
+      elevation: 3,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(15),
       ),
       child: ListTile(
-        contentPadding: EdgeInsets.all(15),
+        contentPadding: EdgeInsets.all(20),
         title: Text(
           title,
           style: TextStyle(
             fontSize: 18,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
+            color: const Color.fromARGB(255, 43, 177, 88),
           ),
         ),
         subtitle: Text(
           description,
           style: TextStyle(
             fontSize: 14,
-            color: Colors.grey[600],
+            color: Colors.grey[700],
           ),
         ),
         trailing: Text(
           time,
           style: TextStyle(
             fontSize: 12,
-            color: Colors.grey[400],
+            color: Colors.grey[500],
           ),
         ),
       ),
