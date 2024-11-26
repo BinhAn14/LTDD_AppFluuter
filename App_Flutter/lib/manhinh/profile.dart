@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert'; // Để xử lý JSON
 import 'package:http/http.dart' as http;
-import 'package:man_hinh/manhinh/manhinh1.dart';
+import 'package:man_hinh/manhinh/dangnhap.dart';
 
 class Manhinh6 extends StatefulWidget {
   @override

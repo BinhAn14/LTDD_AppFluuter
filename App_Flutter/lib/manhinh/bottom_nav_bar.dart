@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:man_hinh/manhinh/manhinh2.dart';
+import 'package:man_hinh/manhinh/Tour.dart';
 import 'package:man_hinh/manhinh/manhinh3.dart';
 import 'package:man_hinh/manhinh/manhinh5.dart';
 import 'package:man_hinh/manhinh/manhinh4.dart';

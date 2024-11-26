@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:man_hinh/manhinh/manhinh2.dart';
+import 'package:man_hinh/manhinh/Tour.dart';
 import 'dart:convert';
 
 class Manhinh1 extends StatefulWidget {
