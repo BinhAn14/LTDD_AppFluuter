@@ -221,7 +221,7 @@ class ChatDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(name),
-        backgroundColor: Color(0xFF4CAF50), // Green color for the app bar
+        backgroundColor: Color(0xFF4CAF50),
       ),
       body: Center(
         child: Padding(

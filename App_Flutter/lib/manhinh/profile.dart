@@ -27,14 +27,14 @@ Future<void> fetchUserData() async {
       print("API Response: ${response.body}");
       final data = json.decode(response.body);
 
-      // Xử lý nếu API trả về danh sách người dùng
+     
       if (data is List && data.isNotEmpty) {
         setState(() {
           fullName = data[0]['full_name']?.toString() ?? "N/A";
           email = data[0]['email'] ?? "N/A";
         });
       }
-      // Xử lý nếu API trả về đối tượng đơn lẻ
+      
       else if (data is Map) {
         setState(() {
           fullName = data['full_name']?.toString() ?? "N/A";
