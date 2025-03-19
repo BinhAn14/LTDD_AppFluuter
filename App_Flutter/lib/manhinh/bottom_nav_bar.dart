@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
-
 import 'package:man_hinh/manhinh/chat.dart';
 import 'package:man_hinh/manhinh/profile.dart';
+import 'package:man_hinh/manhinh/Tour.dart';
+import 'package:man_hinh/manhinh/thongbao.dart';
 
 class BottomNavBar extends StatefulWidget {
+  final String email;
+
+  const BottomNavBar({Key? key, required this.email}) : super(key: key);
+
   @override
   _BottomNavBarState createState() => _BottomNavBarState();
 }
@@ -11,16 +16,17 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = [
-    Manhinh5(),
-    // NotificationsScreen(),
-    Manhinh6(),
-  ];
+  late List<Widget> _screens;
 
-  void _onTabSelected(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _screens = [
+      ProductListScreen(),
+      Manhinh5(),
+      NotificationsScreen(),
+      Manhinh6(email: widget.email), // truyền email sang Manhinh6
+    ];
   }
 
   @override
@@ -40,10 +46,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
         showSelectedLabels: true,
         showUnselectedLabels: true,
         type: BottomNavigationBarType.fixed,
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.explore),
-            label: 'Explore',
+            label: 'Product List',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.message),

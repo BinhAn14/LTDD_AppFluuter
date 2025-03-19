@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:man_hinh/manhinh/Tour.dart';
+import 'package:man_hinh/manhinh/bottom_nav_bar.dart';
 
 class Manhinh1 extends StatefulWidget {
   const Manhinh1({super.key});
@@ -41,7 +42,8 @@ class _Manhinh1State extends State<Manhinh1> {
     if (response.statusCode == 200) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => ProductListScreen()),
+        MaterialPageRoute(
+            builder: (context) => BottomNavBar(email: _emailController.text)),
       );
     } else {
       final Map<String, dynamic> data = jsonDecode(response.body);
