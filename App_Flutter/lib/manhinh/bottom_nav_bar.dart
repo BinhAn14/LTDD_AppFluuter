@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:man_hinh/manhinh/Tour.dart';
+
 import 'package:man_hinh/manhinh/chat.dart';
 import 'package:man_hinh/manhinh/profile.dart';
-import 'package:man_hinh/manhinh/thongbao.dart';
 
 class BottomNavBar extends StatefulWidget {
   @override
@@ -13,7 +12,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    Manhinh3(),
     Manhinh5(),
     // NotificationsScreen(),
     Manhinh6(),

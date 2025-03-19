@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:man_hinh/manhinh/Tour.dart';
+
 import 'dart:convert';
+
+import 'package:man_hinh/manhinh/Tour.dart';
 
 class Manhinh1 extends StatefulWidget {
   const Manhinh1({super.key});
@@ -22,8 +24,7 @@ class _Manhinh1State extends State<Manhinh1> {
       _errorMessage = null;
     });
 
-    final url =
-        Uri.parse('https://gkiltdd.onrender.com/api/users/login');
+    final url = Uri.parse('https://gkiltdd.onrender.com/api/users/login');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -40,7 +41,7 @@ class _Manhinh1State extends State<Manhinh1> {
     if (response.statusCode == 200) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Manhinh3()),
+        MaterialPageRoute(builder: (context) => ProductListScreen()),
       );
     } else {
       final Map<String, dynamic> data = jsonDecode(response.body);
@@ -68,12 +69,10 @@ class _Manhinh1State extends State<Manhinh1> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      
                     ),
                   ),
                 ),
                 const SizedBox(height: 10),
-              
               ],
             ),
             Container(
@@ -86,7 +85,6 @@ class _Manhinh1State extends State<Manhinh1> {
                       style:
                           TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 10),
-                 
                   const SizedBox(height: 15),
                   const Text("Email",
                       style: TextStyle(fontWeight: FontWeight.bold)),

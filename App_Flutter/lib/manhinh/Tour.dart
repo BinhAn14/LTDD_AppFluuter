@@ -1,292 +1,261 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:man_hinh/manhinh/chat.dart';
-import 'package:man_hinh/manhinh/profile.dart';
-import 'package:man_hinh/manhinh/thongbao.dart';
+import 'package:dio/dio.dart';
 
-class Manhinh3 extends StatefulWidget {
-  @override
-  _Manhinh3State createState() => _Manhinh3State();
+class Product {
+  final int id;
+  final String productType;
+  final String name;
+  final String description;
+  final List<String> img;
+  final String thuongHieu;
+  final String tinhTrang;
+  final double price;
+
+  Product({
+    required this.id,
+    required this.productType,
+    required this.name,
+    required this.description,
+    required this.img,
+    required this.thuongHieu,
+    required this.tinhTrang,
+    required this.price,
+  });
+
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+      id: json['_id'],
+      productType: json['product_type'],
+      name: json['name'],
+      description: json['description'],
+      img: List<String>.from(json['img']),
+      thuongHieu: json['thuong_hieu'],
+      tinhTrang: json['tinh_trang'],
+      price: double.parse(json['price'].toString()),
+    );
+  }
 }
 
-class _Manhinh3State extends State<Manhinh3> {
-  int _selectedIndex = 0;
-  List<Tour> tours = [];
-  bool isLoading = true;
+class ProductDetailScreen extends StatelessWidget {
+  final Product product;
+
+  const ProductDetailScreen({Key? key, required this.product})
+      : super(key: key);
 
   @override
-  void initState() {
-    super.initState();
-    fetchTours();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(product.name),
+        centerTitle: true,
+        elevation: 0,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (product.img.isNotEmpty)
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Image.network(
+                    'https://webbanhang-6.onrender.com/${product.img[0]}',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              const SizedBox(height: 20),
+              Text(
+                product.name,
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                'Thương hiệu: ${product.thuongHieu}',
+                style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                'Tình trạng: ${product.tinhTrang}',
+                style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                'Giá: ${product.price.toStringAsFixed(0)} VND',
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.green,
+                    fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                product.description,
+                style: TextStyle(fontSize: 16, height: 1.5),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
+}
 
-  Future<void> fetchTours() async {
-    try {
-      final response = await http
-          .get(Uri.parse('https://gkiltdd.onrender.com/api/trips'));
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        setState(() {
-          tours = data
-              .map((item) => Tour(
-                    title: item['tripName'],
-                    date: DateTime.parse(item['time']).toLocal().toString(),
-                    duration: item['days'],
-                    price: item['price'],
-                    imageUrl: item['avatar'],
-                  ))
-              .toList();
-          isLoading = false;
-        });
-      } else {
-        throw Exception('Failed to load tours');
-      }
-    } catch (error) {
-      setState(() {
-        isLoading = false;
-      });
-      print('Error fetching tours: $error');
-    }
-  }
+class ProductListScreen extends StatefulWidget {
+  @override
+  _ProductListScreenState createState() => _ProductListScreenState();
+}
 
-  void _onItemTapped(int index) {
+class _ProductListScreenState extends State<ProductListScreen> {
+  List<Product> _products = [];
+  bool _isLoading = false;
+
+  final Map<String, String> apiEndpoints = {
+    "Rau củ": "/api/rau-cu",
+    "Sinh tố": "/api/sinh-to",
+    "Thực phẩm tươi sống": "/api/thuc-pham-tuoi-song",
+    "Hoa quả": "/api/hoa-qua",
+    "Các loại hạt": "/api/cac-loai-hat",
+    "Gia vị": "/api/gia-vi",
+  };
+
+  String selectedApi = "";
+
+  Future<void> fetchProducts(String api) async {
     setState(() {
-      _selectedIndex = index;
+      _isLoading = true;
+      _products = [];
     });
 
-    if (index == 0) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Manhinh3()),
-      );
-    } else if (index == 1) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => MessagesScreen()),
-      );
-    } else if (index == 2) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Notifications()),
-      );
-    } else if (index == 3) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ProfileScreen()),
-      );
+    try {
+      var response = await Dio()
+          .get('https://webbanhang-6.onrender.com/danh-muc-san-pham$api');
+      if (response.statusCode == 200) {
+        var responseData = response.data['data'];
+        setState(() {
+          _products = responseData
+              .map<Product>((item) => Product.fromJson(item))
+              .toList();
+        });
+      }
+    } catch (e) {
+      print('Lỗi khi tải dữ liệu: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
+  }
+
+  void onApiSelected(String api) {
+    setState(() {
+      selectedApi = api;
+    });
+    fetchProducts(api);
+  }
+
+  void _navigateToProductDetail(Product product) {
+    Navigator.of(context).push(PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          ProductDetailScreen(product: product),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(opacity: animation, child: child);
+      },
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tours in Danang'),
+        title: Text('Danh sách sản phẩm', style: TextStyle(fontSize: 24)),
+        centerTitle: true,
+        elevation: 0,
       ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : tours.isEmpty
-              ? Center(child: Text('No tours available'))
-              : GridView.builder(
-                  padding: EdgeInsets.all(10),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 1,
-                    crossAxisSpacing: 5,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 1.5,
-                  ),
-                  itemCount: tours.length,
-                  itemBuilder: (context, index) {
-                    return TourCard(tour: tours[index]);
-                  },
-                ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore),
-            label: 'Tours',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.message),
-            label: 'Messages',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notifications',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.teal,
-        unselectedItemColor: Colors.grey,
-        onTap: _onItemTapped,
-      ),
-    );
-  }
-}
-
-class Tour {
-  final String title;
-  final String date;
-  final int duration;
-  final int price;
-  final String imageUrl;
-
-  Tour({
-    required this.title,
-    required this.date,
-    required this.duration,
-    required this.price,
-    required this.imageUrl,
-  });
-}
-
-class TourCard extends StatelessWidget {
-  final Tour tour;
-
-  TourCard({required this.tour});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(10),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: Column(
         children: [
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(15.0),
-                  topRight: Radius.circular(15.0),
-                ),
-                child: CachedNetworkImage(
-                  imageUrl: tour.imageUrl,
-                  height: 200,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) =>
-                      Center(child: CircularProgressIndicator()),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                ),
-              ),
-              Positioned(
-                bottom: 10,
-                left: 10,
-                child: Row(
-                  children: List.generate(5, (index) {
-                    return Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 20,
-                    );
-                  }),
-                ),
-              ),
-              Positioned(
-                bottom: 10,
-                left: 125,
-                child: Row(
-                  children: [
-                    Icon(Icons.favorite, color: Colors.red, size: 16),
-                    SizedBox(width: 5),
-                    Text(
-                      '123 likes',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        shadows: [
-                          Shadow(
-                            blurRadius: 10.0,
-                            color: Colors.black,
-                            offset: Offset(2.0, 2.0),
-                          ),
-                        ],
-                      ),
+          Container(
+            padding: EdgeInsets.all(10),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: apiEndpoints.keys.map((category) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: ElevatedButton(
+                      onPressed: () => onApiSelected(apiEndpoints[category]!),
+                      child: Text(category),
                     ),
-                  ],
-                ),
+                  );
+                }).toList(),
               ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  tour.title,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 5),
-                Row(
-                  children: [
-                    Icon(Icons.calendar_today, size: 16, color: Colors.grey),
-                    SizedBox(width: 5),
-                    Text(tour.date),
-                  ],
-                ),
-                SizedBox(height: 5),
-                Row(
-                  children: [
-                    Icon(Icons.timer, size: 16, color: Colors.grey),
-                    SizedBox(width: 5),
-                    Text('${tour.duration} days'),
-                    Spacer(),
-                    Text(
-                      '\$${tour.price}',
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
             ),
           ),
+          Expanded(
+            child: _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : GridView.builder(
+                    padding: EdgeInsets.all(10),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: 0.7,
+                    ),
+                    itemCount: _products.length,
+                    itemBuilder: (context, index) {
+                      final product = _products[index];
+                      return GestureDetector(
+                        onTap: () => _navigateToProductDetail(product),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 4,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Expanded(
+                                child: product.img.isNotEmpty
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(12)),
+                                        child: Image.network(
+                                          'https://webbanhang-6.onrender.com/${product.img[0]}',
+                                          fit: BoxFit.cover,
+                                        ),
+                                      )
+                                    : Icon(Icons.image_not_supported,
+                                        size: 100),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(product.name,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)),
+                                    Text(
+                                        '${product.price.toStringAsFixed(0)} VND',
+                                        style: TextStyle(color: Colors.green)),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ),
         ],
       ),
     );
   }
 }
 
-class MessagesScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Manhinh5(),
-    );
-  }
-}
-
-class Notifications extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: NotificationsScreen(),
-    );
-  }
-}
-
-class ProfileScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Manhinh6(),
-    );
-  }
+void main() {
+  runApp(MaterialApp(
+    home: ProductListScreen(),
+  ));
 }
