@@ -23,9 +23,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
     super.initState();
     _screens = [
       ProductListScreen(),
-      Manhinh5(),
+      ManhinhChat(),
       NotificationsScreen(),
-      Manhinh6(email: widget.email), // truyền email sang Manhinh6
+      Manhinh6(email: widget.email),
     ];
   }
 

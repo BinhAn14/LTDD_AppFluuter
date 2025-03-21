@@ -5,8 +5,8 @@ class NotificationsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Thông Báo'),
-        backgroundColor: const Color.fromARGB(255, 35, 206, 63),
+        title: Text('Notifications Vegetables'),
+        backgroundColor: const Color(0xFF4CAF50),
         centerTitle: true,
         elevation: 0,
       ),
@@ -20,28 +20,37 @@ class NotificationsScreen extends StatelessWidget {
               child: Text(
                 'Thông Báo Mới Nhất',
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 25,
                   fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 43, 177, 88),
+                  color: const Color(0xFF2E7D32),
                 ),
               ),
             ),
 
             // Các thẻ thông báo
             NotificationCard(
-              title: 'Tin nhắn mới từ Admin',
-              description: 'Lịch học của bạn đã được cập nhật.',
+              title: 'Giá rau cải đã giảm!',
+              description: 'Hôm nay rau cải chỉ còn 20.000đ/kg. Mua ngay! 🥬',
               time: 'Vừa xong',
+              imageAsset: Image.asset('assets/images/raucai.jpg'),
             ),
             NotificationCard(
-              title: 'Bài tập mới được đăng',
-              description: 'Một bài tập mới đã được đăng trong khóa học của bạn.',
-              time: '5 phút trước',
+              title: 'Cà chua hữu cơ mới về',
+              description: 'Cà chua chín mọng, đạt chuẩn hữu cơ 100%! 🍅',
+              time: '10 phút trước',
+              imageAsset: Image.asset('assets/images/cachua.jpg'),
             ),
             NotificationCard(
-              title: 'Nhắc nhở kỳ thi sắp tới',
-              description: 'Kỳ thi tiếp theo của bạn được lên lịch vào ngày mai.',
+              title: 'Khuyến mãi lớn cuối tuần',
+              description: 'Giảm 20% cho tất cả các loại rau củ! 🛒',
               time: '1 giờ trước',
+              imageAsset: Image.asset('assets/images/raucu.png'),
+            ),
+            NotificationCard(
+              title: 'Chanh tươi mới nhập tại cửa hàng',
+              description: 'Giảm 10% 🛒',
+              time: '1 ngày trước',
+              imageAsset: Image.asset('assets/images/chanh.jpg'),
             ),
           ],
         ),
@@ -54,11 +63,13 @@ class NotificationCard extends StatelessWidget {
   final String title;
   final String description;
   final String time;
+  final Image imageAsset;
 
   NotificationCard({
     required this.title,
     required this.description,
     required this.time,
+    required this.imageAsset,
   });
 
   @override
@@ -70,13 +81,21 @@ class NotificationCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
       ),
       child: ListTile(
-        contentPadding: EdgeInsets.all(20),
+        contentPadding: EdgeInsets.all(15),
+        leading: Container(
+          width: 50,
+          height: 50,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: imageAsset,
+          ),
+        ),
         title: Text(
           title,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
-            color: const Color.fromARGB(255, 43, 177, 88),
+            color: const Color(0xFF2E7D32),
           ),
         ),
         subtitle: Text(

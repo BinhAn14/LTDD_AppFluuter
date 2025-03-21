@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
-class Manhinh5 extends StatelessWidget {
+class ManhinhChat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(220),
         child: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.green[700],
           elevation: 0,
           flexibleSpace: Stack(
             children: [
               Positioned.fill(
                 child: Image.asset(
-                  'assets/images/image1.png',
+                  'assets/images/raucu.png',
                   fit: BoxFit.cover,
                   alignment: Alignment.center,
                 ),
@@ -24,7 +24,7 @@ class Manhinh5 extends StatelessWidget {
                   gradient: LinearGradient(
                     colors: [
                       Colors.transparent,
-                      Colors.transparent,
+                      Colors.green.withOpacity(0.7),
                     ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -35,7 +35,7 @@ class Manhinh5 extends StatelessWidget {
                 top: 160,
                 left: 16,
                 child: Text(
-                  'Tin nhắn',
+                  'Message',
                   style: TextStyle(
                     fontSize: 32,
                     color: Colors.white,
@@ -48,17 +48,7 @@ class Manhinh5 extends StatelessWidget {
           ),
           actions: [
             IconButton(
-              icon: Container(
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 169, 210, 244),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
-              ),
+              icon: Icon(Icons.search, color: Colors.white),
               onPressed: () {},
             ),
           ],
@@ -70,11 +60,10 @@ class Manhinh5 extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: TextField(
               decoration: InputDecoration(
-                hintText: 'Tìm kiếm tin nhắn...',
-                hintStyle: TextStyle(color: Colors.grey[600]),
-                prefixIcon: Icon(Icons.search, color: Colors.grey),
+                hintText: 'Search message....',
+                prefixIcon: Icon(Icons.search, color: Colors.green),
                 filled: true,
-                fillColor: Colors.grey[200],
+                fillColor: Colors.green[100],
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
                   borderSide: BorderSide.none,
@@ -86,53 +75,44 @@ class Manhinh5 extends StatelessWidget {
             child: ListView(
               children: [
                 ChatTile(
-                  name: 'Yoo Jin',
-                  message: 'Đây là một địa điểm tuyệt vời',
-                  time: '9:41 SA',
-                  unreadMessages: 2,
-                  imageUrl: 'assets/images/image2.png',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChatDetailScreen(
-                          name: 'Yoo Jin',
-                          message: 'Đây là một địa điểm tuyệt vời',
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                ChatTile(
-                  name: 'Jonathan P',
-                  message: 'Chúng ta có thể bắt đầu lúc 8 giờ sáng',
-                  time: '10:30 SA',
+                  name: 'Mai ',
+                  message: 'Xin chào bạn muốn tôi giúp gì ?',
+                  time: '8:30 SA',
                   imageUrl: 'assets/images/image3.png',
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ChatDetailScreen(
-                          name: 'Jonathan P',
-                          message: 'Chúng ta có thể bắt đầu lúc 8 giờ sáng',
-                        ),
+                        builder: (context) => ChatDetailScreen(name: 'Mai '),
                       ),
                     );
                   },
                 ),
                 ChatTile(
-                  name: 'Myung Dae',
-                  message: 'Hẹn gặp lại vào ngày mai',
-                  time: '11:30 SA',
+                  name: 'Chị Hòa - Nông Trại',
+                  message: 'Đơn hàng cà rốt của chị đã sẵn sàng.',
+                  time: '9:45 SA',
+                  imageUrl: 'assets/images/image2.png',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ChatDetailScreen(name: 'Chị Hòa - Nông Trại'),
+                      ),
+                    );
+                  },
+                ),
+                ChatTile(
+                  name: 'Yossie',
+                  message: 'Bạn muốn mua sản phẩm nào ?',
+                  time: '10:00 SA',
                   imageUrl: 'assets/images/image4.png',
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ChatDetailScreen(
-                          name: 'Myung Dae',
-                          message: 'Hẹn gặp lại vào ngày mai',
-                        ),
+                        builder: (context) => ChatDetailScreen(name: 'Yossie'),
                       ),
                     );
                   },
@@ -150,7 +130,6 @@ class ChatTile extends StatelessWidget {
   final String name;
   final String message;
   final String time;
-  final int unreadMessages;
   final String imageUrl;
   final VoidCallback onTap;
 
@@ -159,7 +138,6 @@ class ChatTile extends StatelessWidget {
     required this.message,
     required this.time,
     required this.imageUrl,
-    this.unreadMessages = 0,
     required this.onTap,
   });
 
@@ -172,82 +150,100 @@ class ChatTile extends StatelessWidget {
       ),
       title: Text(
         name,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 18,
-          color: Colors.black87,
-        ),
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
       ),
       subtitle: Text(
         message,
-        style: TextStyle(
-          color: Colors.grey[700],
-        ),
+        style: TextStyle(color: Colors.grey[700]),
       ),
-      trailing: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(time, style: TextStyle(color: Colors.grey)),
-          if (unreadMessages > 0)
-            Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.red,
-                shape: BoxShape.circle,
-              ),
-              child: Text(
-                unreadMessages.toString(),
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                ),
-              ),
-            ),
-        ],
-      ),
+      trailing: Text(time, style: TextStyle(color: Colors.green[800])),
       onTap: onTap,
     );
   }
 }
 
-class ChatDetailScreen extends StatelessWidget {
+class ChatDetailScreen extends StatefulWidget {
   final String name;
-  final String message;
 
-  ChatDetailScreen({required this.name, required this.message});
+  ChatDetailScreen({required this.name});
+
+  @override
+  _ChatDetailScreenState createState() => _ChatDetailScreenState();
+}
+
+class _ChatDetailScreenState extends State<ChatDetailScreen> {
+  final TextEditingController _controller = TextEditingController();
+  List<Map<String, String>> messages = [];
+
+  void sendMessage() {
+    String userMessage = _controller.text;
+    setState(() {
+      messages.add({'sender': 'Bạn', 'text': userMessage});
+      _controller.clear();
+      Future.delayed(Duration(milliseconds: 500), () {
+        setState(() {
+          messages.add({
+            'sender': widget.name,
+            'text': 'Cảm ơn bạn đã nhắn tin đến cửa hàng.'
+          });
+        });
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(name),
-        backgroundColor: Color(0xFF4CAF50),
+        title: Text(widget.name),
+        backgroundColor: Colors.green[700],
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Tin nhắn từ: $name',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-              SizedBox(height: 20),
-              Text(
-                message,
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black87,
-                ),
-              ),
-            ],
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: messages.length,
+              itemBuilder: (context, index) {
+                return Align(
+                  alignment: messages[index]['sender'] == 'Bạn'
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
+                  child: Container(
+                    margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: messages[index]['sender'] == 'Bạn'
+                          ? Colors.green[300]
+                          : Colors.grey[300],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(messages[index]['text']!),
+                  ),
+                );
+              },
+            ),
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _controller,
+                    decoration: InputDecoration(
+                      hintText: 'Nhập tin nhắn...',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.send, color: Colors.green),
+                  onPressed: sendMessage,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

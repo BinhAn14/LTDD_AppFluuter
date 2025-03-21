@@ -107,7 +107,10 @@ flutter:
     - assets/images7/icon10.png
     - assets/images7/icon11.png
     - images/logo.png
-
+    - assets/images/raucu.png
+    - assets/images/raucai.jpg
+    - assets/images/cachua.jpg
+    - assets/images/chanh.jpg
     - images/hinh1.png
     - images/hinh2.png
     - images/hinh3.png
