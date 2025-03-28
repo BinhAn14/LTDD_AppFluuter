@@ -27,7 +27,7 @@ class _Manhinh6State extends State<Manhinh6> {
   String phoneNumber = "Loading...";
   String address = "Loading...";
   String country = "Loading...";
-  String? _userId; // Thêm biến lưu userId
+  String? _userId;
 
   @override
   void initState() {

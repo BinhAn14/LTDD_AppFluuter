@@ -5,6 +5,8 @@ import 'dart:convert';
 
 import 'package:man_hinh/manhinh/Tour.dart';
 import 'package:man_hinh/manhinh/bottom_nav_bar.dart';
+import 'package:man_hinh/manhinh/cart_provider.dart';
+import 'package:provider/provider.dart';
 
 class Manhinh1 extends StatefulWidget {
   const Manhinh1({super.key});
@@ -40,6 +42,8 @@ class _Manhinh1State extends State<Manhinh1> {
     });
 
     if (response.statusCode == 200) {
+      final cartProvider = Provider.of<CartProvider>(context, listen: false);
+      cartProvider.setUserEmail(_emailController.text);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(

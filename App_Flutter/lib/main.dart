@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:man_hinh/manhinh/dangnhap.dart';
+import 'package:provider/provider.dart';
+import 'package:man_hinh/manhinh/cart_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => CartProvider()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
